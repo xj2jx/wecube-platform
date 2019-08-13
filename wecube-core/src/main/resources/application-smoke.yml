@@ -1,0 +1,21 @@
+server:
+  port: 28080
+  address: 10.107.117.154
+
+spring:
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://10.107.108.227:3306/wecube_core_02?characterEncoding=utf8&serverTimezone=UTC
+    username: wecube_core_02
+    password: Abcd1234
+
+
+wecube:
+  core:
+    cas-server-url: http://10.107.118.27:8080/cas
+    cmdb-server-url: http://10.107.117.154:37000/cmdb
+  plugin:
+    plugin-package-name-of-deploy: salt-stack-deployment
+
+
