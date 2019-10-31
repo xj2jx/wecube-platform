@@ -14,7 +14,7 @@ spring:
 #      password: Abcd1234
 #      driver-class-name: com.mysql.cj.jdbc.Driver
    profiles:
-      active: @activatedProperties@
+      active: '@activatedProperties@'
    thymeleaf:
       cache: false
    jpa:
