@@ -29,6 +29,7 @@ jobs: # a collection of steps
             mkdir test_reports
             cp -r platform-core/target/surefire-reports test_reports
             cp -r platform-auth-server/target/surefire-reports test_reports
+          when: always
       - store_test_results: # uploads the test metadata from the `target/surefire-reports` directory so that it can show up in the CircleCI dashboard. 
       # Upload test results for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
           #path: platform-core/target/surefire-reports
