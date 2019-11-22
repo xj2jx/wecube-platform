@@ -23,10 +23,16 @@ jobs: # a collection of steps
           paths:
             - ~/.m2
           key: circleci-wecube-core-{{ checksum "pom.xml" }}
-        
+      - run:
+          name: Save test results
+          command: |
+            mkdir test_reports
+            cp -r platform-core/target/surefire-reports test_reports
+            cp -r platform-auth-server/target/surefire-reports test_reports
       - store_test_results: # uploads the test metadata from the `target/surefire-reports` directory so that it can show up in the CircleCI dashboard. 
       # Upload test results for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
-          path: platform-core/target/surefire-reports
+          #path: platform-core/target/surefire-reports
+          path: test_reports
       
       - store_artifacts: # store the uberjar as an artifact
       # Upload test summary for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
