@@ -18,12 +18,7 @@
         >{{ $t("apply_data_model") }}</Button
       >
     </div>
-    <div
-      v-if="data.length > 0"
-      class="graph-container"
-      id="data-model-graph"
-    ></div>
-    <span v-else>{{ $t("no_data_model_provided") }}</span>
+    <div class="graph-container" id="data-model-graph"></div>
   </div>
 </template>
 <script>
@@ -143,7 +138,7 @@ export default {
     },
     renderGraph() {
       let nodesString = this.genDOT();
-      console.log(111111, nodesString);
+      console.log("nodesString", nodesString);
       this.graph.graphviz.renderDot(nodesString);
     },
     initGraph() {
