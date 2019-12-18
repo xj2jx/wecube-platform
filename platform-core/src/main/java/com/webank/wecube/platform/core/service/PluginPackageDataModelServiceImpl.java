@@ -105,7 +105,7 @@ public class PluginPackageDataModelServiceImpl implements PluginPackageDataModel
         Map<String, PluginPackageAttribute> nameToAttributeMap = new HashMap<>();
         transferredPluginPackageDataModel.getPluginPackageEntities()
                 .forEach(entity ->
-                        entity.getPluginPackageAttributeList()
+                        entity.getPluginPackageAttributes()
                                 .forEach(attribute ->
                                         nameToAttributeMap.put(entity.getPackageName() + ATTRIBUTE_KEY_SEPARATOR + entity.getName() + ATTRIBUTE_KEY_SEPARATOR + attribute.getName(), attribute)));
 
@@ -209,7 +209,7 @@ public class PluginPackageDataModelServiceImpl implements PluginPackageDataModel
         for (PluginPackageEntity candidateEntity : pluginPackageDataModel.getPluginPackageEntities()) {
 
             for (PluginPackageAttribute pluginPackageAttribute : candidateEntity
-                    .getPluginPackageAttributeList()) {
+                    .getPluginPackageAttributes()) {
                 String selfName = pluginPackageAttribute.getPluginPackageEntity().getPackageName() + ATTRIBUTE_KEY_SEPARATOR
                         + pluginPackageAttribute.getPluginPackageEntity().getName() + ATTRIBUTE_KEY_SEPARATOR
                         + pluginPackageAttribute.getName();
@@ -254,7 +254,7 @@ public class PluginPackageDataModelServiceImpl implements PluginPackageDataModel
                             throw new WecubeCoreException(msg);
                         }
 
-                        Optional<PluginPackageAttribute> pluginPackageAttributeOptional = foundReferenceEntityOptional.get().getPluginPackageAttributeList().stream().filter(attribute -> referenceAttributeName.equals(attribute.getName())).findAny();
+                        Optional<PluginPackageAttribute> pluginPackageAttributeOptional = foundReferenceEntityOptional.get().getPluginPackageAttributes().stream().filter(attribute -> referenceAttributeName.equals(attribute.getName())).findAny();
                         if (pluginPackageAttributeOptional.isPresent()) {
                             pluginPackageAttribute.setPluginPackageAttribute(pluginPackageAttributeOptional.get());
                         } else {
@@ -488,7 +488,72 @@ public class PluginPackageDataModelServiceImpl implements PluginPackageDataModel
             }
         }
         return resultList;
+    }
 
+    @Override
+    public DataModelComparisionDto compareDataModels(String newDataModelId, String oldDataModelId) {
+        if (StringUtils.isBlank(newDataModelId) || StringUtils.isBlank(oldDataModelId) || newDataModelId.equals(oldDataModelId)) {
+            return null;
+        }
+        DataModelComparisionDto dto = new DataModelComparisionDto();
+        if (!dataModelRepository.existsById(newDataModelId)) {
+            throw new WecubeCoreException(String.format("Data model not found for id [%s]", newDataModelId));
+        }
+        if (!dataModelRepository.existsById(oldDataModelId)) {
+            throw new WecubeCoreException(String.format("Data model not found for id [%s]", oldDataModelId));
+        }
 
+        PluginPackageDataModel newDataModel = dataModelRepository.findById(newDataModelId).get();
+        PluginPackageDataModel oldDataModel = dataModelRepository.findById(oldDataModelId).get();
+
+        Set<PluginPackageEntity> newEntities = newDataModel.getPluginPackageEntities();
+        if (null != newEntities && newEntities.size() > 0) {
+            Set<String> newEntityNames = new HashSet<>();
+            Set<PluginPackageAttribute> attributes = new HashSet<>();
+            newEntities.forEach(entity -> {
+                newEntityNames.add(entity.getName());
+                if (null != entity.getPluginPackageAttributes() && entity.getPluginPackageAttributes().size() > 0) {
+                    attributes.addAll(entity.getPluginPackageAttributes());
+                }
+            });
+            dto.setNewEntities(newEntityNames.stream().sorted().collect(Collectors.toList()));
+            dto.setNewAttributes(
+                    attributes
+                            .stream()
+                            .map(attribute -> attribute.getPluginPackageEntity().getName()
+                                    + ":" + attribute.getDataType()
+                                    + ":" + attribute.getName()
+                                    + (attribute.getPluginPackageAttribute() != null ? (attribute.getPluginPackageAttribute().getDataType()
+                                    + ":" + attribute.getPluginPackageAttribute().getName()) : ""))
+                            .sorted()
+                            .collect(Collectors.toList())
+            );
+        }
+
+        Set<PluginPackageEntity> oldEntities = oldDataModel.getPluginPackageEntities();
+        if (null != oldEntities && oldEntities.size() > 0) {
+            Set<String> oldEntityNames = new HashSet<>();
+            Set<PluginPackageAttribute> attributes = new HashSet<>();
+            oldEntities.forEach(entity -> {
+                oldEntityNames.add(entity.getName());
+                if (null != entity.getPluginPackageAttributes() && entity.getPluginPackageAttributes().size() > 0) {
+                    attributes.addAll(entity.getPluginPackageAttributes());
+                }
+            });
+            dto.setOldEntities(oldEntityNames.stream().sorted().collect(Collectors.toList()));
+            dto.setOldAttributes(
+                    attributes
+                            .stream()
+                            .map(attribute -> attribute.getPluginPackageEntity().getName()
+                                    + ":" + attribute.getDataType()
+                                    + ":" + attribute.getName()
+                                    + (attribute.getPluginPackageAttribute() != null ? (attribute.getPluginPackageAttribute().getDataType()
+                                    + ":" + attribute.getPluginPackageAttribute().getName()) : ""))
+                            .sorted()
+                            .collect(Collectors.toList())
+            );
+        }
+
+        return dto;
     }
 }

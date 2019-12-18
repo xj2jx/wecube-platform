@@ -39,7 +39,7 @@ public class PluginPackageEntity {
 
     @JsonManagedReference
     @OneToMany(mappedBy = "pluginPackageEntity", cascade = CascadeType.ALL)
-    private List<PluginPackageAttribute> pluginPackageAttributeList;
+    private List<PluginPackageAttribute> pluginPackageAttributes;
 
     public PluginPackageEntity() {
     }
@@ -57,7 +57,7 @@ public class PluginPackageEntity {
         this.name = name;
         this.displayName = displayName;
         this.description = description;
-        this.pluginPackageAttributeList = pluginPackageAttributes;
+        this.pluginPackageAttributes = pluginPackageAttributes;
     }
 
     public String getId() {
@@ -100,12 +100,12 @@ public class PluginPackageEntity {
         return description;
     }
 
-    public List<PluginPackageAttribute> getPluginPackageAttributeList() {
-        return pluginPackageAttributeList;
+    public List<PluginPackageAttribute> getPluginPackageAttributes() {
+        return pluginPackageAttributes;
     }
 
-    public void setPluginPackageAttributeList(List<PluginPackageAttribute> pluginPackageAttributeList) {
-        this.pluginPackageAttributeList = pluginPackageAttributeList;
+    public void setPluginPackageAttributes(List<PluginPackageAttribute> pluginPackageAttributes) {
+        this.pluginPackageAttributes = pluginPackageAttributes;
     }
 
     @Override

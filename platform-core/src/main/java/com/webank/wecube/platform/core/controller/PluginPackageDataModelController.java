@@ -45,4 +45,10 @@ public class PluginPackageDataModelController {
     public JsonResponse applyNewDataModel(@RequestBody PluginPackageDataModelDto dataModelDto) {
         return JsonResponse.okayWithData(pluginPackageDataModelService.register(dataModelDto, true));
     }
+
+    @GetMapping("/models/{new-data-model-id}/compare/{old-data-model-id}")
+    @ResponseBody
+    public JsonResponse compareTwoDataModels(@PathVariable("new-data-model-id") String newDataModelId, @PathVariable("old-data-model-id") String oldDataModelId) {
+        return JsonResponse.okayWithData(pluginPackageDataModelService.compareDataModels(newDataModelId, oldDataModelId));
+    }
 }

@@ -1,5 +1,6 @@
 package com.webank.wecube.platform.core.service;
 
+import com.webank.wecube.platform.core.dto.DataModelComparisionDto;
 import com.webank.wecube.platform.core.dto.PluginPackageAttributeDto;
 import com.webank.wecube.platform.core.dto.PluginPackageDataModelDto;
 
@@ -20,4 +21,5 @@ public interface PluginPackageDataModelService {
 
     List<PluginPackageAttributeDto> getRefByInfo(String packageName, String entityName);
 
+    DataModelComparisionDto compareDataModels(String newDataModelId, String oldDataModelId);
 }

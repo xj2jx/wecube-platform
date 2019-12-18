@@ -46,8 +46,8 @@ public class PluginPackageEntityDto {
         pluginPackageEntityDto.setDisplayName(pluginPackageEntity.getDisplayName());
         pluginPackageEntityDto.setDescription(pluginPackageEntity.getDescription());
         pluginPackageEntityDto.setDataModelVersion(pluginPackageEntity.getPluginPackageDataModel().getVersion());
-        if (pluginPackageEntity.getPluginPackageAttributeList() != null) {
-            pluginPackageEntity.getPluginPackageAttributeList()
+        if (pluginPackageEntity.getPluginPackageAttributes() != null) {
+            pluginPackageEntity.getPluginPackageAttributes()
                     .forEach(pluginPackageAttribute -> pluginPackageEntityDto.attributes
                             .add(PluginPackageAttributeDto.fromDomain(pluginPackageAttribute)));
         }
@@ -68,7 +68,7 @@ public class PluginPackageEntityDto {
             for (PluginPackageAttributeDto pluginPackageAttributeDto : pluginPackageEntityDto.getAttributes()) {
                 pluginPackageAttributeList.add(PluginPackageAttributeDto.toDomain(pluginPackageAttributeDto, null, pluginPackageEntity));
             }
-            pluginPackageEntity.setPluginPackageAttributeList(pluginPackageAttributeList);
+            pluginPackageEntity.setPluginPackageAttributes(pluginPackageAttributeList);
         }
 
         return pluginPackageEntity;
