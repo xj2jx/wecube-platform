@@ -1,6 +1,7 @@
 package com.webank.wecube.platform.core.service.user;
 
 import com.webank.wecube.platform.core.commons.ApplicationProperties;
+import com.webank.wecube.platform.core.commons.AuthenticationContextHolder;
 import com.webank.wecube.platform.core.commons.WecubeCoreException;
 import com.webank.wecube.platform.core.dto.CommonResponseDto;
 import com.webank.wecube.platform.core.dto.user.RoleDto;
@@ -182,9 +183,8 @@ public class UserManagementServiceImpl implements UserManagementService {
     }
 
     @Override
-    public List<String> getRoleIdListByUsername(String token, String username) {
-        List<RoleDto> roleListByUserName = this.getRoleListByUserName(token, username);
-        return roleListByUserName.stream().map(RoleDto::getId).collect(Collectors.toList());
+    public List<String> getRoleIdListByUsername() {
+        return new ArrayList<>(Objects.requireNonNull(AuthenticationContextHolder.getCurrentUserRoles()));
     }
 
     @Override

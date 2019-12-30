@@ -57,12 +57,8 @@ public class UserManagementController {
 
     @GetMapping("/users/roles")
     @ResponseBody
-    public CommonResponseDto getRolesByCurrentUserName(@RequestHeader(value = "Authorization") String token) {
-        try {
-            return userManagementService.getRolesByUserName(token, AuthenticationContextHolder.getCurrentUsername());
-        } catch (WecubeCoreException ex) {
-            return CommonResponseDto.error(ex.getMessage());
-        }
+    public CommonResponseDto getRolesByCurrentUserName() {
+        return CommonResponseDto.okayWithData(AuthenticationContextHolder.getCurrentUserRoles());
     }
 
     @GetMapping("/users/{user-name}/roles")

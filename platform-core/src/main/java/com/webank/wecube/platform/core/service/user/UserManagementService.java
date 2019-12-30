@@ -39,5 +39,5 @@ public interface UserManagementService {
 
     List<RoleMenuDto> getMenusByUserName(String token, String username);
 
-    List<String> getRoleIdListByUsername(String token, String username);
+    List<String> getRoleIdListByUsername();
 }

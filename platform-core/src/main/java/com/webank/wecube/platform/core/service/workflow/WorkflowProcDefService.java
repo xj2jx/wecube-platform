@@ -87,8 +87,7 @@ public class WorkflowProcDefService extends AbstractWorkflowService {
 
         ProcDefInfoEntity savedProcDefInfoDraftEntity = processDefInfoRepo.save(draftEntity);
         log.info("process definition saved with id:{}", savedProcDefInfoDraftEntity.getId());
-        String currentUsername = AuthenticationContextHolder.getCurrentUsername();
-        List<String> roleIds = userManagementService.getRoleIdListByUsername(token, currentUsername);
+        List<String> roleIds = userManagementService.getRoleIdListByUsername();
         Map<String, List<String>> roleBinds = new HashMap<>();
         roleBinds.put(ProcRoleBindingEntity.permissionEnum.MGMT.name(), roleIds);
 
@@ -213,7 +212,7 @@ public class WorkflowProcDefService extends AbstractWorkflowService {
         return result;
     }
 
-    public void removeProcessDefinition(String token, String procDefId) {
+    public void removeProcessDefinition(String procDefId) {
         if (StringUtils.isBlank(procDefId)) {
             throw new WecubeCoreException("Process definition id is blank.");
         }
@@ -227,11 +226,10 @@ public class WorkflowProcDefService extends AbstractWorkflowService {
 
         ProcDefInfoEntity procDef = procDefOpt.get();
 
-        String username = AuthenticationContextHolder.getCurrentUsername();
         boolean isAvailableToManageThisProcess = this.processRoleService.checkIfUserHasMgmtPermission(procDef.getId(),
-                this.userManagementService.getRoleIdListByUsername(token, username));
+                this.userManagementService.getRoleIdListByUsername());
         if (!isAvailableToManageThisProcess) {
-            String msg = String.format("The user: [%s] doesn't have permission to manage this process: [%s]", username,
+            String msg = String.format("The user: [%s] doesn't have permission to manage this process: [%s]", AuthenticationContextHolder.getCurrentUsername(),
                     procDef.getId());
             log.error(msg);
             throw new WecubeCoreException(msg);
@@ -433,9 +431,8 @@ public class WorkflowProcDefService extends AbstractWorkflowService {
         return pdto;
     }
 
-    public List<ProcDefInfoDto> getProcessDefinitions(String token, boolean includeDraftProcDef, String permissionStr) {
-        List<String> roleIdList = this.userManagementService.getRoleIdListByUsername(token,
-                AuthenticationContextHolder.getCurrentUsername());
+    public List<ProcDefInfoDto> getProcessDefinitions(boolean includeDraftProcDef, String permissionStr) {
+        List<String> roleIdList = this.userManagementService.getRoleIdListByUsername();
 
         // check if there is permission specified
         List<ProcRoleDto> procRoleDtoList;

@@ -46,9 +46,9 @@ public class ProcessRoleServiceImpl implements ProcessRoleService {
     }
 
     @Override
-    public ProcRoleOverviewDto retrieveRoleIdByProcId(String token, String procId) throws WecubeCoreException {
+    public ProcRoleOverviewDto retrieveRoleIdByProcId(String procId) throws WecubeCoreException {
         // check if the current user has the role to manage such process
-        List<String> roleIdListByUsername = this.userManagementService.getRoleIdListByUsername(token, AuthenticationContextHolder.getCurrentUsername());
+        List<String> roleIdListByUsername = this.userManagementService.getRoleIdListByUsername();
         boolean ifUserHasMgmtPermission = checkIfUserHasMgmtPermission(procId, roleIdListByUsername);
         if (!ifUserHasMgmtPermission) {
             String msg = String.format("The user doesn't have process: [%s]'s MGMT permission", procId);
@@ -110,13 +110,13 @@ public class ProcessRoleServiceImpl implements ProcessRoleService {
     }
 
     @Override
-    public void updateProcRoleBinding(String token, String procId, ProcRoleRequestDto procRoleRequestDto) throws WecubeCoreException {
+    public void updateProcRoleBinding(String procId, ProcRoleRequestDto procRoleRequestDto) throws WecubeCoreException {
         String permissionStr = procRoleRequestDto.getPermission();
         List<String> roleIdList = procRoleRequestDto.getRoleIdList();
         ProcRoleBindingEntity.permissionEnum permissionEnum = transferPermissionStrToEnum(permissionStr);
 
         // check if user's roles has permission to manage this process
-        List<String> roleIdListByUsername = this.userManagementService.getRoleIdListByUsername(token, AuthenticationContextHolder.getCurrentUsername());
+        List<String> roleIdListByUsername = this.userManagementService.getRoleIdListByUsername();
         boolean ifUserHasMgmtPermission = checkIfUserHasMgmtPermission(procId, roleIdListByUsername);
         if (!ifUserHasMgmtPermission) {
             String msg = String.format("The user doesn't have process: [%s]'s MGMT permission", procId);
@@ -127,11 +127,11 @@ public class ProcessRoleServiceImpl implements ProcessRoleService {
     }
 
     @Override
-    public void deleteProcRoleBinding(String token, String procId, ProcRoleRequestDto procRoleRequestDto) throws WecubeCoreException {
+    public void deleteProcRoleBinding(String procId, ProcRoleRequestDto procRoleRequestDto) throws WecubeCoreException {
         ProcRoleBindingEntity.permissionEnum permissionEnum = transferPermissionStrToEnum(procRoleRequestDto.getPermission());
 
         // check if the current user has the role to manage such process
-        List<String> roleIdListByUsername = this.userManagementService.getRoleIdListByUsername(token, AuthenticationContextHolder.getCurrentUsername());
+        List<String> roleIdListByUsername = this.userManagementService.getRoleIdListByUsername();
         boolean ifUserHasMgmtPermission = checkIfUserHasMgmtPermission(procId, roleIdListByUsername);
         if (!ifUserHasMgmtPermission) {
             String msg = String.format("The user doesn't have process: [%s]'s MGMT permission", procId);
